@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>张万森 — 宠物空间设计</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Outfit:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cream: #F5F0E8;
+    --sand: #E8DFD0;
+    --stone: #C4B49A;
+    --bark: #6B5B45;
+    --deep: #1E1A16;
+    --accent: #8C7355;
+    --serif: 'Cormorant Garamond', Georgia, serif;
+    --sans: 'Outfit', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--deep);
+    font-family: var(--sans);
+    font-weight: 300;
+    cursor: none;
+    overflow-x: hidden;
+  }
+
+  /* Custom Cursor */
+  .cursor {
+    position: fixed;
+    width: 8px; height: 8px;
+    background: var(--bark);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.15s ease;
+    transform: translate(-50%, -50%);
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 36px; height: 36px;
+    border: 1px solid var(--bark);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transition: transform 0.4s ease, width 0.3s, height 0.3s, opacity 0.3s;
+    transform: translate(-50%, -50%);
+    opacity: 0.5;
+  }
+  body.hover-active .cursor-ring { width: 56px; height: 56px; opacity: 0.3; }
+
+  /* Navigation */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 28px 52px;
+    mix-blend-mode: multiply;
+  }
+  .nav-logo {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 300;
+    letter-spacing: 0.18em;
+    color: var(--deep);
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+  .nav-links {
+    display: flex;
+    gap: 40px;
+    list-style: none;
+  }
+  .nav-links a {
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 300;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--bark);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  .nav-links a:hover { color: var(--deep); }
+
+  /* Hero */
+  .hero {
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 52px 80px;
+    position: relative;
+    z-index: 2;
+  }
+  .hero-eyebrow {
+    font-family: var(--sans);
+    font-size: 10px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--stone);
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeUp 1s 0.3s forwards;
+  }
+  .hero-title {
+    font-family: var(--serif);
+    font-size: clamp(52px, 6vw, 88px);
+    font-weight: 300;
+    line-height: 1.05;
+    color: var(--deep);
+    opacity: 0;
+    animation: fadeUp 1s 0.5s forwards;
+  }
+  .hero-title em {
+    font-style: italic;
+    color: var(--bark);
+  }
+  .hero-sub {
+    margin-top: 32px;
+    font-size: 13px;
+    font-weight: 300;
+    line-height: 1.9;
+    color: var(--bark);
+    max-width: 340px;
+    opacity: 0;
+    animation: fadeUp 1s 0.7s forwards;
+  }
+  .hero-cta {
+    margin-top: 48px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    opacity: 0;
+    animation: fadeUp 1s 0.9s forwards;
+  }
+  .btn-primary {
+    display: inline-block;
+    padding: 14px 36px;
+    background: var(--deep);
+    color: var(--cream);
+    font-family: var(--sans);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: background 0.3s;
+  }
+  .btn-primary:hover { background: var(--bark); }
+  .btn-ghost {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--bark);
+    text-decoration: none;
+    border-bottom: 1px solid var(--stone);
+    padding-bottom: 2px;
+    transition: color 0.3s, border-color 0.3s;
+  }
+  .btn-ghost:hover { color: var(--deep); border-color: var(--deep); }
+
+  .hero-right {
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-img-wrap {
+    position: absolute;
+    inset: 40px 0 0 40px;
+    background: var(--sand);
+    overflow: hidden;
+  }
+  .hero-img-wrap img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    filter: sepia(15%) contrast(1.05);
+    transform: scale(1.05);
+    animation: zoomOut 8s ease forwards;
+  }
+  .hero-counter {
+    position: absolute;
+    bottom: 80px;
+    right: 52px;
+    font-family: var(--serif);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--stone);
+    writing-mode: vertical-rl;
+    opacity: 0;
+    animation: fadeIn 1s 1.2s forwards;
+  }
+  .hero-line {
+    position: absolute;
+    bottom: 0;
+    left: 52px;
+    width: 1px;
+    height: 0;
+    background: var(--stone);
+    animation: growLine 1.2s 0.8s forwards;
+  }
+
+  /* Section common */
+  section { padding: 120px 52px; }
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--stone);
+    margin-bottom: 16px;
+  }
+  .section-title {
+    font-family: var(--serif);
+    font-size: clamp(36px, 4vw, 58px);
+    font-weight: 300;
+    line-height: 1.1;
+    color: var(--deep);
+  }
+  .section-title em { font-style: italic; color: var(--bark); }
+
+  /* About */
+  .about {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 100px;
+    align-items: center;
+    background: var(--sand);
+    padding: 120px 52px;
+  }
+  .about-img-col { position: relative; }
+  .about-img-main {
+    width: 100%;
+    aspect-ratio: 3/4;
+    background: var(--stone);
+    overflow: hidden;
+  }
+  .about-img-main img { width:100%; height:100%; object-fit:cover; filter: sepia(10%); }
+  .about-img-accent {
+    position: absolute;
+    width: 55%;
+    aspect-ratio: 4/3;
+    background: var(--cream);
+    bottom: -40px;
+    right: -40px;
+    overflow: hidden;
+    border: 8px solid var(--cream);
+  }
+  .about-img-accent img { width:100%; height:100%; object-fit:cover; filter: sepia(10%); }
+  .about-stat {
+    position: absolute;
+    top: 40px; left: -28px;
+    background: var(--deep);
+    color: var(--cream);
+    padding: 24px 28px;
+    text-align: center;
+  }
+  .about-stat-num {
+    font-family: var(--serif);
+    font-size: 42px;
+    font-weight: 300;
+    display: block;
+    line-height: 1;
+  }
+  .about-stat-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--stone);
+    margin-top: 6px;
+    display: block;
+  }
+  .about-text { padding-top: 20px; }
+  .about-body {
+    margin-top: 32px;
+    font-size: 15px;
+    line-height: 2;
+    color: var(--bark);
+    max-width: 460px;
+  }
+  .about-quote {
+    margin-top: 48px;
+    padding-left: 24px;
+    border-left: 2px solid var(--stone);
+    font-family: var(--serif);
+    font-size: 20px;
+    font-style: italic;
+    font-weight: 300;
+    color: var(--deep);
+    line-height: 1.6;
+  }
+  .about-values {
+    margin-top: 48px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .value-item {}
+  .value-num {
+    font-family: var(--serif);
+    font-size: 13px;
+    color: var(--stone);
+    letter-spacing: 0.1em;
+  }
+  .value-name {
+    margin-top: 8px;
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--deep);
+  }
+  .value-desc {
+    margin-top: 6px;
+    font-size: 13px;
+    color: var(--bark);
+    line-height: 1.7;
+  }
+
+  /* Services */
+  .services { background: var(--cream); }
+  .services-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 72px;
+  }
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+  .service-card {
+    background: var(--sand);
+    padding: 52px 40px;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.4s;
+    cursor: none;
+  }
+  .service-card::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 100%;
+    height: 0;
+    background: var(--deep);
+    transition: height 0.4s ease;
+    z-index: 0;
+  }
+  .service-card:hover::before { height: 100%; }
+  .service-card:hover .service-num,
+  .service-card:hover .service-name,
+  .service-card:hover .service-desc { color: var(--cream); }
+  .service-card:hover .service-name { color: var(--sand); }
+  .service-num {
+    font-family: var(--serif);
+    font-size: 13px;
+    color: var(--stone);
+    position: relative; z-index: 1;
+    transition: color 0.4s;
+  }
+  .service-name {
+    margin-top: 32px;
+    font-family: var(--serif);
+    font-size: 26px;
+    font-weight: 300;
+    color: var(--deep);
+    line-height: 1.2;
+    position: relative; z-index: 1;
+    transition: color 0.4s;
+  }
+  .service-desc {
+    margin-top: 20px;
+    font-size: 13px;
+    line-height: 1.9;
+    color: var(--bark);
+    position: relative; z-index: 1;
+    transition: color 0.4s;
+  }
+  .service-arrow {
+    position: absolute;
+    bottom: 40px; right: 40px;
+    font-size: 20px;
+    color: var(--stone);
+    position: relative; z-index: 1;
+    transition: color 0.4s, transform 0.3s;
+  }
+  .service-card:hover .service-arrow { color: var(--sand); transform: translate(4px, -4px); }
+
+  /* Portfolio */
+  .portfolio { background: var(--deep); padding: 120px 52px; }
+  .portfolio .section-label { color: var(--stone); }
+  .portfolio .section-title { color: var(--cream); }
+  .portfolio .section-title em { color: var(--stone); }
+  .portfolio-filter {
+    display: flex;
+    gap: 32px;
+    margin-top: 48px;
+    margin-bottom: 48px;
+    flex-wrap: wrap;
+  }
+  .filter-btn {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--stone);
+    background: none;
+    border: none;
+    cursor: none;
+    padding: 8px 0;
+    border-bottom: 1px solid transparent;
+    transition: color 0.3s, border-color 0.3s;
+    font-family: var(--sans);
+    font-weight: 300;
+  }
+  .filter-btn:hover, .filter-btn.active {
+    color: var(--cream);
+    border-bottom-color: var(--stone);
+  }
+  .portfolio-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3px;
+  }
+  .portfolio-item {
+    position: relative;
+    overflow: hidden;
+    cursor: none;
+  }
+  .portfolio-item:first-child {
+    grid-row: span 2;
+  }
+  .portfolio-img {
+    width: 100%;
+    height: 100%;
+    min-height: 320px;
+    background: var(--bark);
+    overflow: hidden;
+  }
+  .portfolio-img img {
+    width:100%; height:100%;
+    object-fit:cover;
+    filter: sepia(15%) contrast(1.05) brightness(0.9);
+    transition: transform 0.8s ease, filter 0.5s;
+  }
+  .portfolio-item:first-child .portfolio-img { min-height: 640px; }
+  .portfolio-item:hover .portfolio-img img {
+    transform: scale(1.06);
+    filter: sepia(5%) contrast(1.05) brightness(1);
+  }
+  .portfolio-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(30,26,22,0.85) 0%, transparent 50%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 36px;
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+  .portfolio-item:hover .portfolio-overlay { opacity: 1; }
+  .portfolio-tag {
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--stone);
+    margin-bottom: 10px;
+  }
+  .portfolio-name {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 300;
+    color: var(--cream);
+    line-height: 1.2;
+  }
+  .portfolio-meta {
+    margin-top: 12px;
+    font-size: 12px;
+    color: var(--stone);
+    letter-spacing: 0.1em;
+  }
+  .portfolio-label {
+    position: absolute;
+    bottom: 20px; left: 20px;
+    opacity: 1;
+    transition: opacity 0.3s;
+  }
+  .portfolio-item:hover .portfolio-label { opacity: 0; }
+  .portfolio-label-name {
+    font-family: var(--serif);
+    font-size: 16px;
+    font-weight: 300;
+    color: var(--cream);
+    text-shadow: 0 1px 8px rgba(0,0,0,0.5);
+  }
+
+  /* Process */
+  .process { background: var(--cream); }
+  .process-steps {
+    margin-top: 72px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+  }
+  .process-step {
+    padding: 48px 40px;
+    border-left: 1px solid var(--sand);
+    position: relative;
+  }
+  .process-step:first-child { border-left: none; }
+  .step-num {
+    font-family: var(--serif);
+    font-size: 60px;
+    font-weight: 300;
+    color: var(--sand);
+    line-height: 1;
+  }
+  .step-name {
+    margin-top: 24px;
+    font-family: var(--serif);
+    font-size: 20px;
+    font-weight: 300;
+    color: var(--deep);
+  }
+  .step-desc {
+    margin-top: 16px;
+    font-size: 13px;
+    line-height: 1.9;
+    color: var(--bark);
+  }
+
+  /* Contact */
+  .contact {
+    background: var(--sand);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 100px;
+    align-items: start;
+    padding: 120px 52px;
+  }
+  .contact-info {}
+  .contact-body {
+    margin-top: 32px;
+    font-size: 15px;
+    line-height: 2;
+    color: var(--bark);
+    max-width: 400px;
+  }
+  .contact-details {
+    margin-top: 48px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .contact-detail-item {}
+  .contact-detail-label {
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--stone);
+    margin-bottom: 4px;
+  }
+  .contact-detail-val {
+    font-size: 14px;
+    color: var(--deep);
+  }
+  .contact-form {}
+  .form-group {
+    margin-bottom: 28px;
+  }
+  .form-label {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--stone);
+    margin-bottom: 10px;
+  }
+  .form-input, .form-select, .form-textarea {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--stone);
+    padding: 12px 0;
+    font-family: var(--sans);
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--deep);
+    outline: none;
+    transition: border-color 0.3s;
+    cursor: none;
+    appearance: none;
+  }
+  .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--deep); }
+  .form-input::placeholder, .form-textarea::placeholder { color: var(--stone); }
+  .form-textarea { resize: none; min-height: 100px; line-height: 1.7; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .form-submit {
+    width: 100%;
+    padding: 18px;
+    background: var(--deep);
+    color: var(--cream);
+    border: none;
+    font-family: var(--sans);
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    cursor: none;
+    transition: background 0.3s;
+    margin-top: 8px;
+  }
+  .form-submit:hover { background: var(--bark); }
+
+  /* Footer */
+  footer {
+    background: var(--deep);
+    padding: 52px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  .footer-logo {
+    font-family: var(--serif);
+    font-size: 18px;
+    font-weight: 300;
+    letter-spacing: 0.2em;
+    color: var(--cream);
+  }
+  .footer-copy {
+    font-size: 11px;
+    color: var(--stone);
+    letter-spacing: 0.1em;
+  }
+  .footer-links {
+    display: flex;
+    gap: 28px;
+    list-style: none;
+  }
+  .footer-links a {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--stone);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  .footer-links a:hover { color: var(--cream); }
+
+  /* Animations */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 0.6; }
+  }
+  @keyframes zoomOut {
+    from { transform: scale(1.08); }
+    to { transform: scale(1); }
+  }
+  @keyframes growLine {
+    from { height: 0; }
+    to { height: 80px; }
+  }
+
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.9s ease, transform 0.9s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Color placeholders for images */
+  .img-placeholder {
+    width: 100%; height: 100%;
+    background: var(--stone);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .img-placeholder span {
+    font-family: var(--serif);
+    font-size: 12px;
+    color: var(--cream);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    opacity: 0.6;
+  }
+  .portfolio-img .img-placeholder { min-height: inherit; }
+  .img-p1 { background: #8C7355; }
+  .img-p2 { background: #7A6548; }
+  .img-p3 { background: #6B5B45; }
+  .img-p4 { background: #9A8568; }
+  .img-p5 { background: #B09878; }
+  .img-about1 { background: #C4B49A; }
+  .img-about2 { background: #A89278; }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- Navigation -->
+<nav>
+  <a href="#" class="nav-logo">张万森-宠物友好空间设计</a>
+  <ul class="nav-links">
+    <li><a href="#about">关于我们</a></li>
+    <li><a href="#services">服务</a></li>
+    <li><a href="#portfolio">案例</a></li>
+    <li><a href="#process">流程</a></li>
+    <li><a href="#contact">联系</a></li>
+  </ul>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-left">
+    <p class="hero-eyebrow">宠物空间设计工作室</p>
+    <h1 class="hero-title">
+      为毛孩子<br>
+      <em>设计理想居所</em>
+    </h1>
+    <p class="hero-sub">
+      我们相信，每一位宠物都值得拥有<br>
+      经过精心设计的生活空间。<br>
+      美学与功能，从不妥协。
+    </p>
+    <div class="hero-cta">
+      <a href="#portfolio" class="btn-primary">查看案例</a>
+      <a href="#contact" class="btn-ghost">预约咨询</a>
+    </div>
+    <div class="hero-line"></div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-img-wrap">
+      <img src="01.jpg" style="width:100%;height:100%;object-fit:cover;">
+      </div>
+    </div>
+    <p class="hero-counter">2019 — 2025</p>
+  </div>
+</section>
+
+<!-- About -->
+<section class="about" id="about">
+  <div class="about-img-col reveal">
+    <div class="about-img-main">
+      <div class="img-placeholder img-about1">
+        <span>Studio Photo</span>
+        <span style="font-size:10px;opacity:0.4">工作室/团队照片</span>
+      </div>
+    </div>
+    <div class="about-img-accent">
+      <div class="img-placeholder img-about2">
+        <span>Detail</span>
+      </div>
+    </div>
+    <div class="about-stat">
+      <span class="about-stat-num">120+</span>
+      <span class="about-stat-label">完成案例</span>
+    </div>
+  </div>
+  <div class="about-text reveal">
+    <p class="section-label">关于 Pawhaus</p>
+    <h2 class="section-title">
+      让空间懂得<br>
+      <em>主人与宠物的语言</em>
+    </h2>
+    <p class="about-body">
+      我们是一支专注宠物友好空间设计的团队，成立于2020年。我们相信，一个真正好的宠物空间，不只是铺几块垫子、放几个笼具——而是从动线、材质、光线、气味管理，到主人的审美，进行整体思考与设计。
+    </p>
+    <blockquote class="about-quote">
+      "动物与人类，共享同一屋檐下的美好生活。"
+    </blockquote>
+    <div class="about-values">
+      <div class="value-item">
+        <span class="value-num">01</span>
+        <p class="value-name">空间美学</p>
+        <p class="value-desc">兼顾业主审美与宠物需求，拒绝将实用性和美学对立</p>
+      </div>
+      <div class="value-item">
+        <span class="value-num">02</span>
+        <p class="value-name">材质安全</p>
+        <p class="value-desc">所有选材均通过宠物友好安全标准，健康第一</p>
+      </div>
+      <div class="value-item">
+        <span class="value-num">03</span>
+        <p class="value-name">动线规划</p>
+        <p class="value-desc">从宠物视角出发，设计科学的行为动线</p>
+      </div>
+      <div class="value-item">
+        <span class="value-num">04</span>
+        <p class="value-name">全程陪伴</p>
+        <p class="value-desc">从初次咨询到交付验收，设计师全程跟进</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Services -->
+<section class="services" id="services">
+  <div class="services-header reveal">
+    <div>
+      <p class="section-label">我们的服务</p>
+      <h2 class="section-title">专业服务<br><em>量身定制</em></h2>
+    </div>
+    <a href="#contact" class="btn-ghost">了解详情</a>
+  </div>
+  <div class="services-grid reveal">
+    <div class="service-card">
+      <span class="service-num">01</span>
+      <h3 class="service-name">全案空间<br>设计</h3>
+      <p class="service-desc">从平面规划到软装落地，提供宠物友好家居/商业空间的一站式设计服务，覆盖宠物店、寄宿中心、宠物医院等场景。</p>
+      <span class="service-arrow">→</span>
+    </div>
+    <div class="service-card">
+      <span class="service-num">02</span>
+      <h3 class="service-name">局部改造<br>升级</h3>
+      <p class="service-desc">针对既有空间的局部功能优化，如宠物洗澡区、活动区、隔离区改造，最小化施工，最大化提升使用体验。</p>
+      <span class="service-arrow">→</span>
+    </div>
+    <div class="service-card">
+      <span class="service-num">03</span>
+      <h3 class="service-name">软装搭配<br>顾问</h3>
+      <p class="service-desc">在不大动空间结构的前提下，通过材质替换、家具重组、配色调整，实现宠物友好的高颜值升级。</p>
+      <span class="service-arrow">→</span>
+    </div>
+  </div>
+</section>
+
+<!-- Portfolio -->
+<section class="portfolio" id="portfolio">
+  <div class="reveal">
+    <p class="section-label">案例展示</p>
+    <h2 class="section-title">每个空间<br>都有自己的<em>故事</em></h2>
+  </div>
+  <div class="portfolio-filter reveal">
+    <button class="filter-btn active" onclick="filterPortfolio('all', this)">全部</button>
+    <button class="filter-btn" onclick="filterPortfolio('residential', this)">住宅空间</button>
+    <button class="filter-btn" onclick="filterPortfolio('commercial', this)">商业空间</button>
+    <button class="filter-btn" onclick="filterPortfolio('renovation', this)">局部改造</button>
+  </div>
+  <div class="portfolio-grid reveal" id="portfolioGrid">
+    <div class="portfolio-item" data-type="residential">
+      <div class="portfolio-img">
+        <div class="img-placeholder img-p1" style="min-height:640px">
+          <span>Case 01</span>
+          <span style="font-size:10px;opacity:0.4">替换为项目实景大图</span>
+        </div>
+      </div>
+      <div class="portfolio-label">
+        <p class="portfolio-label-name">北京·朝阳 猫宅</p>
+      </div>
+      <div class="portfolio-overlay">
+        <p class="portfolio-tag">住宅空间 · 2024</p>
+        <h3 class="portfolio-name">北京·朝阳 猫宅改造</h3>
+        <p class="portfolio-meta">三猫家庭 / 120㎡ / 全案设计</p>
+      </div>
+    </div>
+    <div class="portfolio-item" data-type="commercial">
+      <div class="portfolio-img">
+        <div class="img-placeholder img-p2">
+          <span>Case 02</span>
+          <span style="font-size:10px;opacity:0.4">替换为项目实景图</span>
+        </div>
+      </div>
+      <div class="portfolio-label">
+        <p class="portfolio-label-name">上海·静安 宠物寄宿</p>
+      </div>
+      <div class="portfolio-overlay">
+        <p class="portfolio-tag">商业空间 · 2024</p>
+        <h3 class="portfolio-name">上海·静安 精品寄宿中心</h3>
+        <p class="portfolio-meta">精品寄宿 / 200㎡ / 全案设计</p>
+      </div>
+    </div>
+    <div class="portfolio-item" data-type="renovation">
+      <div class="portfolio-img">
+        <div class="img-placeholder img-p3">
+          <span>Case 03</span>
+          <span style="font-size:10px;opacity:0.4">替换为项目实景图</span>
+        </div>
+      </div>
+      <div class="portfolio-label">
+        <p class="portfolio-label-name">广州·天河 犬舍改造</p>
+      </div>
+      <div class="portfolio-overlay">
+        <p class="portfolio-tag">局部改造 · 2023</p>
+        <h3 class="portfolio-name">广州·天河 犬舍功能升级</h3>
+        <p class="portfolio-meta">大型犬 / 洗澡区改造 / 功能优化</p>
+      </div>
+    </div>
+    <div class="portfolio-item" data-type="residential">
+      <div class="portfolio-img">
+        <div class="img-placeholder img-p4">
+          <span>Case 04</span>
+          <span style="font-size:10px;opacity:0.4">替换为项目实景图</span>
+        </div>
+      </div>
+      <div class="portfolio-label">
+        <p class="portfolio-label-name">深圳·南山 犬猫同居</p>
+      </div>
+      <div class="portfolio-overlay">
+        <p class="portfolio-tag">住宅空间 · 2023</p>
+        <h3 class="portfolio-name">深圳·南山 犬猫共融宅</h3>
+        <p class="portfolio-meta">犬猫同住 / 85㎡ / 动线规划</p>
+      </div>
+    </div>
+    <div class="portfolio-item" data-type="commercial">
+      <div class="portfolio-img">
+        <div class="img-placeholder img-p5">
+          <span>Case 05</span>
+          <span style="font-size:10px;opacity:0.4">替换为项目实景图</span>
+        </div>
+      </div>
+      <div class="portfolio-label">
+        <p class="portfolio-label-name">成都·锦江 宠物医院</p>
+      </div>
+      <div class="portfolio-overlay">
+        <p class="portfolio-tag">商业空间 · 2023</p>
+        <h3 class="portfolio-name">成都·锦江 宠物医院室内</h3>
+        <p class="portfolio-meta">宠物医疗 / 350㎡ / 全案设计</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Process -->
+<section class="process" id="process">
+  <div class="reveal">
+    <p class="section-label">服务流程</p>
+    <h2 class="section-title">四步，从想法<br>到<em>落地</em></h2>
+  </div>
+  <div class="process-steps reveal">
+    <div class="process-step">
+      <p class="step-num">01</p>
+      <h3 class="step-name">初次咨询</h3>
+      <p class="step-desc">了解你的空间条件、宠物习性、预算范围和审美偏好，建立设计任务书。</p>
+    </div>
+    <div class="process-step">
+      <p class="step-num">02</p>
+      <h3 class="step-name">方案设计</h3>
+      <p class="step-desc">提供平面布局方案、效果图呈现及材质样板，充分沟通至满意为止。</p>
+    </div>
+    <div class="process-step">
+      <p class="step-num">03</p>
+      <h3 class="step-name">施工落地</h3>
+      <p class="step-desc">设计师全程驻场跟进施工，确保每个细节与设计图纸保持一致。</p>
+    </div>
+    <div class="process-step">
+      <p class="step-num">04</p>
+      <h3 class="step-name">交付验收</h3>
+      <p class="step-desc">完工后陪同业主验收，提供使用说明及3个月免费维护回访服务。</p>
+    </div>
+  </div>
+</section>
+
+<!-- Contact -->
+<section class="contact" id="contact">
+  <div class="contact-info reveal">
+    <p class="section-label">联系我们</p>
+    <h2 class="section-title">开始你的<br><em>项目</em></h2>
+    <p class="contact-body">
+      每一个好的空间，都始于一次好的对话。告诉我们你的想法，我们来帮你实现。
+    </p>
+    <div class="contact-details">
+      <div class="contact-detail-item">
+        <p class="contact-detail-label">邮箱</p>
+        <p class="contact-detail-val">hello@pawhaus.com</p>
+      </div>
+      <div class="contact-detail-item">
+        <p class="contact-detail-label">微信</p>
+        <p class="contact-detail-val">pawhaus_studio</p>
+      </div>
+      <div class="contact-detail-item">
+        <p class="contact-detail-label">工作时间</p>
+        <p class="contact-detail-val">周一至周六 · 09:00 — 18:00</p>
+      </div>
+      <div class="contact-detail-item">
+        <p class="contact-detail-label">所在城市</p>
+        <p class="contact-detail-val">新加坡（可远程服务全球）</p>
+      </div>
+    </div>
+  </div>
+  <div class="contact-form reveal">
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">你的姓名</label>
+        <input class="form-input" type="text" placeholder="王先生 / 李女士">
+      </div>
+      <div class="form-group">
+        <label class="form-label">联系方式</label>
+        <input class="form-input" type="text" placeholder="电话或微信号">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">项目类型</label>
+      <select class="form-select">
+        <option value="" disabled selected>请选择</option>
+        <option>住宅空间全案设计</option>
+        <option>商业空间全案设计</option>
+        <option>局部改造升级</option>
+        <option>软装搭配顾问</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">项目面积</label>
+        <input class="form-input" type="text" placeholder="约 __ 平方米">
+      </div>
+      <div class="form-group">
+        <label class="form-label">预算范围</label>
+        <select class="form-select">
+          <option value="" disabled selected>请选择</option>
+          <option>5万以下</option>
+          <option>5—10万</option>
+          <option>10—20万</option>
+          <option>20万以上</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">项目描述</label>
+      <textarea class="form-textarea" placeholder="简单描述你的空间和需求，宠物种类、主要痛点等…"></textarea>
+    </div>
+    <button class="form-submit">提交询盘</button>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <p class="footer-logo">Pawhaus</p>
+  <ul class="footer-links">
+    <li><a href="#about">关于</a></li>
+    <li><a href="#portfolio">案例</a></li>
+    <li><a href="#contact">联系</a></li>
+  </ul>
+  <p class="footer-copy">© 2025 Pawhaus Studio. 宠物空间设计</p>
+</footer>
+
+<script>
+  // Cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
+  document.addEventListener('mousemove', e => {
+    mouseX = e.clientX; mouseY = e.clientY;
+    cursor.style.left = mouseX + 'px';
+    cursor.style.top = mouseY + 'px';
+  });
+  function animateRing() {
+    ringX += (mouseX - ringX) * 0.12;
+    ringY += (mouseY - ringY) * 0.12;
+    ring.style.left = ringX + 'px';
+    ring.style.top = ringY + 'px';
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+  document.querySelectorAll('a, button, .service-card, .portfolio-item').forEach(el => {
+    el.addEventListener('mouseenter', () => document.body.classList.add('hover-active'));
+    el.addEventListener('mouseleave', () => document.body.classList.remove('hover-active'));
+  });
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 80);
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(r => observer.observe(r));
+
+  // Portfolio filter
+  function filterPortfolio(type, btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.portfolio-item').forEach(item => {
+      const show = type === 'all' || item.dataset.type === type;
+      item.style.opacity = show ? '1' : '0.2';
+      item.style.pointerEvents = show ? 'auto' : 'none';
+    });
+  }
+</script>
+</body>
+</html>
